@@ -86,25 +86,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
 
-  void _toggleLed(String color, bool current) {
-    _tap();
-    if (color == 'red') {
-      setState(() => _ledRed = !current);
-      _sendCommand('led_red', _ledRed ? 'true' : 'false');
-    } else if (color == 'yellow') {
-      setState(() => _ledYellow = !current);
-      _sendCommand('led_yellow', _ledYellow ? 'true' : 'false');
-    } else {
-      setState(() => _ledGreen = !current);
-      _sendCommand('led_green', _ledGreen ? 'true' : 'false');
-    }
-  }
+  // void _toggleLed(String color, bool current) {
+  //   _tap();
+  //   if (color == 'red') {
+  //     setState(() => _ledRed = !current);
+  //     _sendCommand('led_red', _ledRed ? 'true' : 'false');
+  //   } else if (color == 'yellow') {
+  //     setState(() => _ledYellow = !current);
+  //     _sendCommand('led_yellow', _ledYellow ? 'true' : 'false');
+  //   } else {
+  //     setState(() => _ledGreen = !current);
+  //     _sendCommand('led_green', _ledGreen ? 'true' : 'false');
+  //   }
+  // }
 
-  void _toggleBuzzer() {
-    _tap();
-    setState(() => _buzzerState = !_buzzerState);
-    _sendCommand('buzzer', _buzzerState ? 'true' : 'false');
-  }
+  // void _toggleBuzzer() {
+  //   _tap();
+  //   setState(() => _buzzerState = !_buzzerState);
+  //   _sendCommand('buzzer', _buzzerState ? 'true' : 'false');
+  // }
 
   void _toggleScreen() {
     _tap();
@@ -124,17 +124,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _sendCommand('alert_level', '$level');
   }
 
-  void _beepOnce() {
-    _tap();
-    _sendCommand('beep', '1');
-    _showSnack('🔔 Beep 1 ครั้ง');
-  }
+  // void _beepOnce() {
+  //   _tap();
+  //   _sendCommand('beep', '1');
+  //   _showSnack('🔔 Beep 1 ครั้ง');
+  // }
 
-  void _beepAlarm() {
-    _tap();
-    _sendCommand('beep', '3');
-    _showSnack('🚨 Alarm 3 ครั้ง');
-  }
+  // void _beepAlarm() {
+  //   _tap();
+  //   _sendCommand('beep', '3');
+  //   _showSnack('🚨 Alarm 3 ครั้ง');
+  // }
 
   void _refreshData() {
     _tap();
@@ -542,155 +542,111 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   // ── LED Controls ─────────────────────────────
 
-  Widget _buildLEDControls() {
-    return _panelContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _sectionHeader("LED CONTROL", Icons.lightbulb_rounded, [const Color(0xFFFFD600), const Color(0xFFFF6D00)]),
-          const SizedBox(height: 6),
-          if (_autoMode)
-            Container(
-              margin: const EdgeInsets.only(top: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+Widget _buildLEDControls() {
+  return _panelContainer(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionHeader(
+          "LED STATUS",
+          Icons.lightbulb_rounded,
+          [Color(0xFFFFD600), Color(0xFFFF6D00)],
+        ),
+        const SizedBox(height: 12),
+
+        Row(
+          children: [
+            Expanded(
+              child: _LedButton(
+                label: "RED",
+                icon: Icons.circle,
+                isOn: _ledRed,
+                color: const Color(0xFFFF1744),
+                onToggle: () {}, // ❌ ไม่ให้กด
               ),
-              child: const Row(
-                children: [
-                  Icon(Icons.info_outline_rounded, color: Colors.orange, size: 14),
-                  SizedBox(width: 6),
-                  Text("Auto Mode เปิดอยู่ — LED ถูกควบคุมอัตโนมัติ",
-                      style: TextStyle(color: Colors.orange, fontSize: 11)),
-                ],
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _LedButton(
+                label: "YELLOW",
+                icon: Icons.circle,
+                isOn: _ledYellow,
+                color: const Color(0xFFFFD600),
+                onToggle: () {},
               ),
-            )
-          else ...[
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _LedButton(
-                    label: "RED",
-                    icon: Icons.circle,
-                    isOn: _ledRed,
-                    color: const Color(0xFFFF1744),
-                    onToggle: () => _toggleLed('red', _ledRed),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _LedButton(
-                    label: "YELLOW",
-                    icon: Icons.circle,
-                    isOn: _ledYellow,
-                    color: const Color(0xFFFFD600),
-                    onToggle: () => _toggleLed('yellow', _ledYellow),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _LedButton(
-                    label: "GREEN",
-                    icon: Icons.circle,
-                    isOn: _ledGreen,
-                    color: const Color(0xFF00E676),
-                    onToggle: () => _toggleLed('green', _ledGreen),
-                  ),
-                ),
-              ],
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _LedButton(
+                label: "GREEN",
+                icon: Icons.circle,
+                isOn: _ledGreen,
+                color: const Color(0xFF00E676),
+                onToggle: () {},
+              ),
             ),
           ],
-        ],
-      ),
-    );
-  }
+        ),
+
+        const SizedBox(height: 10),
+
+        const Text(
+          "LED ทำงานอัตโนมัติตามค่า PM2.5 จากบอร์ด",
+          style: TextStyle(
+            color: Colors.white38,
+            fontSize: 11,
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   // ── Buzzer Controls ──────────────────────────
 
   Widget _buildBuzzerControls() {
-    return _panelContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _sectionHeader("BUZZER", Icons.volume_up_rounded, [const Color(0xFFE91E63), const Color(0xFF9C27B0)]),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: _BigToggle(
-                  label: "Buzzer",
-                  subtitle: _buzzerState ? "เปิดอยู่" : "ปิดอยู่",
-                  icon: Icons.notifications_active_rounded,
-                  isOn: _buzzerState,
-                  onToggle: _toggleBuzzer,
-                  gradient: _buzzerState
-                      ? [const Color(0xFFE91E63), const Color(0xFF9C27B0)]
-                      : [const Color(0xFF37474F), const Color(0xFF546E7A)],
-                ),
+  return _panelContainer(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionHeader(
+          "BUZZER STATUS",
+          Icons.volume_up_rounded,
+          [Color(0xFFE91E63), Color(0xFF9C27B0)],
+        ),
+        const SizedBox(height: 16),
+
+        Row(
+          children: [
+            Icon(
+              _buzzerState ? Icons.notifications_active : Icons.notifications_off,
+              color: _buzzerState ? Colors.red : Colors.white38,
+              size: 28,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              _buzzerState ? "BUZZER ACTIVE" : "BUZZER IDLE",
+              style: const TextStyle(
+                color: Colors.white70,
+                fontWeight: FontWeight.w600,
               ),
-            ],
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 8),
+
+        const Text(
+          "Buzzer ทำงานตามเงื่อนไขของบอร์ด",
+          style: TextStyle(
+            color: Colors.white38,
+            fontSize: 11,
           ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: _beepOnce,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF00BCD4), Color(0xFF006064)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: [BoxShadow(color: const Color(0xFF00BCD4).withValues(alpha: 0.35), blurRadius: 12)],
-                    ),
-                    child: const Column(
-                      children: [
-                        Icon(Icons.notifications_rounded, color: Colors.white, size: 24),
-                        SizedBox(height: 4),
-                        Text("Beep 1×", style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: GestureDetector(
-                  onTap: _beepAlarm,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFFF1744), Color(0xFFD500F9)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: [BoxShadow(color: const Color(0xFFFF1744).withValues(alpha: 0.35), blurRadius: 12)],
-                    ),
-                    child: const Column(
-                      children: [
-                        Icon(Icons.notification_important_rounded, color: Colors.white, size: 24),
-                        SizedBox(height: 4),
-                        Text("Alarm 3×", style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
   // ── Alert Level ──────────────────────────────
 
